@@ -2,7 +2,7 @@
 
 ###############################################################################
 # tasknote - associate note file with individual tasks in taskwarrior
-# 
+#
 # Copyright 2011, Alan Bowen, bowen@tcnj.edu.
 # All rights reserved.
 #
@@ -46,16 +46,19 @@ VIEWER=cat
 # other computers, i.e. ~/dropbox/tasknotes
 FOLDER="~/Dropbox/tasks/notes/"
 
-# Check for existence of $FOLDER
-if [ ! -d $FOLDER ]; then
-	echo    "Notes folder '$FOLDER' does not exist."
+# build full path & file name to store notes in
+folder=`echo $FOLDER | sed "s|^~|$HOME|"`
+
+# Check for existence of $folder
+if [ ! -d $folder ]; then
+	echo    "Notes folder '$folder' does not exist."
 	echo -n "Shall I create it (y/n)? "
 	read answer
 	if [ $answer == "y" ]; then
-	  echo "Creating '$FOLDER'."
-	  mkdir -p $FOLDER;
+	  echo "Creating '$folder'."
+	  mkdir -p $folder;
 	else
-	  echo "Did NOT create $FOLDER. Exiting."
+	  echo "Did NOT create $folder. Exiting."
 	  exit 1;
 	fi
 fi
@@ -77,9 +80,8 @@ fi
 #find UUID from given task
 uuid=`$TASKBIN $1 uuids`
 
-# build full path & file name to store notes in
-folder=`echo $FOLDER | sed "s|^~|$HOME|"`
-file="$folder$uuid$EXT"
+# Create the filename for the given task
+file="$folder/$uuid$EXT"
 
 # determine if notes file already exists
 fileexists=0
